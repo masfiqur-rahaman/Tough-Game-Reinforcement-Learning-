@@ -96,7 +96,7 @@ class Environment:
         # font = cv2.FONT_HERSHEY_SIMPLEX
         # img = cv2.putText(np.array(img), 'OpenCV Tuts!', (0, 130), font, 1, (200, 255, 155), 2, cv2.LINE_AA)
         # cv2.imshow("image", np.array(img))  # show it!
-        cv2.imshow("image", img)  # show it!
+        cv2.imshow("ToughG", img)  # show it!
         cv2.waitKey(1)
 
     # FOR CNN #
