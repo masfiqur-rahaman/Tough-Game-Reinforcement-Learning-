@@ -4,9 +4,9 @@ import cv2
 import pygame
 
 class Environment:
-    SIZE = 50
+    SIZE = 30
     window_width = 500
-    window_height = 500
+    window_height = 300
     n_enemies = 3
     enemies = np.ndarray(n_enemies, dtype=Object)
     RETURN_IMAGES = True
