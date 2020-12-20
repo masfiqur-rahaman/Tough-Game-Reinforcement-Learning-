@@ -2,7 +2,7 @@ from Agent import *
 
 environment = Environment()
 agent = DQNAgent()
-agent.model = tf.keras.models.load_model("./Pretrained models/60Kepisodes_BEST_Game_2x256__19800____16.00max_-196.54avg_-353.00min__1605717567.model")
+agent.model = tf.keras.models.load_model("./Pretrained models\Best model SIZE=30/60Kepisodes_Game_size_30__8700____-3.00max__-74.08avg_-355.00min__1608435267.model")
 
 
 

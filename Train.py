@@ -23,7 +23,7 @@ if not os.path.isdir('models'):
 
 agent = DQNAgent()
 # Start from best mode. Comment following 2 lines, if you want to train from begining
-agent.model = tf.keras.models.load_model("./Pretrained models/40Kepisodes_BEST_2x256____25.00max__-37.16avg_-407.00min__1604741142.model")
+# agent.model = tf.keras.models.load_model("./Pretrained models/40Kepisodes_BEST_2x256____25.00max__-37.16avg_-407.00min__1604741142.model")
 agent.target_model = agent.model
 
 # Iterate over episodes

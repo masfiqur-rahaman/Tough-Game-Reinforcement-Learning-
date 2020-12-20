@@ -4,10 +4,10 @@ import cv2
 import pygame
 
 class Environment:
-    SIZE = 10
-    window_width = 300
-    window_height = 300
-    n_enemies = 5
+    SIZE = 30  # It was 10 before
+    window_width = 1000
+    window_height = 1000
+    n_enemies = 10
     enemies = np.ndarray(n_enemies, dtype=Object)
     RETURN_IMAGES = True
     MOVE_PENALTY = 1
