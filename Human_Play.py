@@ -35,8 +35,9 @@ def pressed_to_action():
 
     return action
 
-def play():
+def play(ENEMY_SPEED):
     episode = 0
+    score = 0
     # set game speed to 30 fps
     # environment.clock.tick(30)
     while True:
@@ -44,8 +45,8 @@ def play():
         print(episode)
         episode += 1
         # Reset environment and get initial state
-        current_state = environment.reset()
-        cv2.waitKey(600)
+        current_state = environment.reset(ENEMY_SPEED)
+        cv2.waitKey(1000)
         done = False
         while not done:
             cv2.waitKey(100)
@@ -53,9 +54,12 @@ def play():
             # get_pressed = pygame.key.get_pressed()
 
             action = pressed_to_action()
-            # calculate one step
-            environment.step(action)
-            # render current state
-            environment.render()
+            print("action", action)
+            new_state, reward, done = environment.step(action)
+            if done and reward == environment.FOOD_REWARD:
+                score += 1
+            environment.render(episode, score)
 
-play()
+            current_state = new_state
+
+play(ENEMY_SPEED=2)

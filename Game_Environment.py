@@ -4,7 +4,9 @@ import cv2
 import pygame
 
 class Environment:
-    SIZE = 30  # It was 10 before
+    # SIZE = 30  # It was 10 before
+    WIDTH = 30
+    HEIGHT = 30
     window_width = 1000
     window_height = 1000
     n_enemies = 10
@@ -13,7 +15,7 @@ class Environment:
     MOVE_PENALTY = 1
     ENEMY_PENALTY = 300
     FOOD_REWARD = 25
-    OBSERVATION_SPACE_VALUES = (SIZE, SIZE, 3)  # 4
+    OBSERVATION_SPACE_VALUES = (WIDTH, HEIGHT, 3)  # 4
     ACTION_SPACE_SIZE = 9
     PLAYER_N = 1  # player key in dict
     FOOD_N = 2  # food key in dict
@@ -23,16 +25,16 @@ class Environment:
          2: (0, 255, 0),
          3: (0, 0, 255)}
 
-    def reset(self):
-        self.player = Object(self.SIZE, "player")
-        self.food = Object(self.SIZE, "food")
+    def reset(self, ENEMY_SPEED=1):
+        self.player = Object(self.WIDTH, self.HEIGHT, "player")
+        self.food = Object(self.WIDTH, self.HEIGHT, "food")
         # while self.food == self.player:
-        #     self.food = Object(self.SIZE, "food")
+        #     self.food = Object(self.WIDTH, self.HEIGHT, "food")
         for i in range(self.n_enemies):
-            self.enemies[i] = Object(self.SIZE, "enemy", object_id=i, n_objects=self.n_enemies)
+            self.enemies[i] = Object(self.WIDTH, self.HEIGHT, "enemy", object_id=i, n_objects=self.n_enemies, ENEMY_SPEED=ENEMY_SPEED)
             # print(i, self.enemies[i])
         # while self.enemy == self.player or self.enemy == self.food:
-        #     self.enemy = Object(self.SIZE, "enemy")
+        #     self.enemy = Object(self.WIDTH, self.HEIGHT, "enemy")
 
         self.episode_step = 0
 
@@ -102,7 +104,7 @@ class Environment:
     # FOR CNN #
     def get_image(self):
         # print(self.player.x, self.player.y)
-        env = np.zeros((self.SIZE, self.SIZE, 3), dtype=np.uint8)  # starts an rbg of our size
+        env = np.zeros((self.WIDTH, self.HEIGHT, 3), dtype=np.uint8)  # starts an rbg of our size
         env[self.food.x][self.food.y] = self.d[self.FOOD_N]  # sets the food location tile to green color
         for i in range(self.n_enemies):
             env[self.enemies[i].x][self.enemies[i].y] = self.d[self.ENEMY_N]  # sets the enemy location to red

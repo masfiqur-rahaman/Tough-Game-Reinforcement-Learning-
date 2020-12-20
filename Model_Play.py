@@ -6,14 +6,14 @@ agent.model = tf.keras.models.load_model("./Pretrained models\Best model SIZE=30
 
 
 
-def play():
+def play(ENEMY_SPEED):
     episode = 0
     score = 0
     while True:
         print(episode)
         episode += 1
         # Reset environment and get initial state
-        current_state = environment.reset()
+        current_state = environment.reset(ENEMY_SPEED)
 
         cv2.waitKey(1000)
         done = False
@@ -28,4 +28,4 @@ def play():
 
             current_state = new_state
 
-play()
+play(ENEMY_SPEED=2)
