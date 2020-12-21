@@ -49,12 +49,13 @@ def play(ENEMY_SPEED):
         cv2.waitKey(1000)
         done = False
         while not done:
-            cv2.waitKey(100)
+            cv2.waitKey(300)
             # get pressed keys, generate action
             # get_pressed = pygame.key.get_pressed()
 
             action = pressed_to_action()
-            print("action", action)
+            if action != 8:
+                print("action", action)
             new_state, reward, done = environment.step(action)
             if done and reward == environment.FOOD_REWARD:
                 score += 1
@@ -62,4 +63,4 @@ def play(ENEMY_SPEED):
 
             current_state = new_state
 
-play(ENEMY_SPEED=2)
+play(ENEMY_SPEED=3)

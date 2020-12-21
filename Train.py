@@ -49,7 +49,7 @@ for episode in tqdm(range(1, EPISODES + 1), ascii=True, unit='episodes'):
             action = np.argmax(agent. get_qs(current_state))
         else:
             # Get random action
-            action = np.random.randint(0, environment.ACTION_SPACE_SIZE)
+            action = np.random.randint(4, environment.ACTION_SPACE_SIZE)
 
         new_state, reward, done = environment.step(action)
 

@@ -5,17 +5,40 @@ import pygame
 
 class Environment:
     # SIZE = 30  # It was 10 before
-    WIDTH = 30
-    HEIGHT = 30
-    window_width = 1000
-    window_height = 1000
-    n_enemies = 10
+
+
+    # Polygon environment---------------
+    # height = 22
+    # width = 46
+    # # 20X12
+    # vertices = np.array(
+    #     [[0, 0], [0, 21], [12, 21], [12, 17], [37, 17], [37, 4], [39, 4], [39, 21], [45, 21], [45, 0], [33, 0], [33, 4],
+    #      [8, 4], [8, 17], [6, 17], [6, 0]],
+    #     np.int32
+    # )
+
+    height = 20
+    width = 56
+    # 20X4
+    vertices = np.array(
+        [[0, 0], [0, 19], [16, 19], [16, 16], [43, 16], [43, 4], [45, 4], [45, 19], [55, 19], [55, 0], [39, 0], [39, 3],
+         [12, 3], [12, 15], [10, 15], [10, 0]],
+        np.int32
+    )
+    isClosed = True
+    color = (255, 0, 0)
+    thickness = 1
+    #-----------------------------------
+
+    window_width = 570
+    window_height = 260
+    n_enemies = 4
     enemies = np.ndarray(n_enemies, dtype=Object)
     RETURN_IMAGES = True
     MOVE_PENALTY = 1
     ENEMY_PENALTY = 300
     FOOD_REWARD = 25
-    OBSERVATION_SPACE_VALUES = (WIDTH, HEIGHT, 3)  # 4
+    OBSERVATION_SPACE_VALUES = (height, width, 3)  # 4
     ACTION_SPACE_SIZE = 9
     PLAYER_N = 1  # player key in dict
     FOOD_N = 2  # food key in dict
@@ -26,15 +49,16 @@ class Environment:
          3: (0, 0, 255)}
 
     def reset(self, ENEMY_SPEED=1):
-        self.player = Object(self.WIDTH, self.HEIGHT, "player")
-        self.food = Object(self.WIDTH, self.HEIGHT, "food")
+        self.player = Object(self.height, self.width, "player", vertices=self.vertices)
+        self.food = Object(self.height, self.width, "food", vertices=self.vertices)
         # while self.food == self.player:
-        #     self.food = Object(self.WIDTH, self.HEIGHT, "food")
+        #     self.food = Object(self.height, self.width, "food")
         for i in range(self.n_enemies):
-            self.enemies[i] = Object(self.WIDTH, self.HEIGHT, "enemy", object_id=i, n_objects=self.n_enemies, ENEMY_SPEED=ENEMY_SPEED)
+            self.enemies[i] = Object(self.height, self.width, "enemy", vertices=self.vertices, object_id=i, n_objects=self.n_enemies, ENEMY_SPEED=ENEMY_SPEED)
+            # print(self.enemies[i])
             # print(i, self.enemies[i])
         # while self.enemy == self.player or self.enemy == self.food:
-        #     self.enemy = Object(self.WIDTH, self.HEIGHT, "enemy")
+        #     self.enemy = Object(self.height, self.width, "enemy")
 
         self.episode_step = 0
 
@@ -90,7 +114,7 @@ class Environment:
 
     def render(self, episode=-1, score=-1):
         img = self.get_image()
-        img = img.resize((self.window_width, self.window_height))  # resizing so we can see our agent in all its glory.
+        img = cv2.resize(img, (self.window_width, self.window_height))  # resizing so we can see our agent in all its glory.
         img = cv2.putText(np.array(img), "Episode: "+str(episode), (0,15), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=.5,
                   color=(0,0,255), thickness=1, lineType=cv2.LINE_AA)
         img = cv2.putText(np.array(img), "Score: " + str(score), (self.window_width-100, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
@@ -104,10 +128,23 @@ class Environment:
     # FOR CNN #
     def get_image(self):
         # print(self.player.x, self.player.y)
-        env = np.zeros((self.WIDTH, self.HEIGHT, 3), dtype=np.uint8)  # starts an rbg of our size
-        env[self.food.x][self.food.y] = self.d[self.FOOD_N]  # sets the food location tile to green color
+        env = np.zeros((self.height, self.width, 3), dtype=np.uint8)  # starts an rbg of our size
+        img = cv2.polylines(env, [self.vertices], self.isClosed, self.color, self.thickness)
+
+        # env[self.food.y][self.food.x] = self.d[self.FOOD_N]  # sets the food location tile to green color
+        start_point = (self.food.x - 1, self.food.y - 1)
+        end_point = (self.food.x + 1, self.food.y + 1)
+        img = cv2.rectangle(img, start_point, end_point, color=self.d[self.FOOD_N], thickness=-1)
         for i in range(self.n_enemies):
-            env[self.enemies[i].x][self.enemies[i].y] = self.d[self.ENEMY_N]  # sets the enemy location to red
-        env[self.player.x][self.player.y] = self.d[self.PLAYER_N]  # sets the player tile to blue
-        img = Image.fromarray(env, 'RGB')  # reading to rgb. Apparently. Even tho color definitions are bgr. ???
+            # print(self.enemies[i].x, self.enemies[i].y)
+            # env[self.enemies[i].y][self.enemies[i].x] = self.d[self.ENEMY_N]  # sets the enemy location to red
+            img = cv2.circle(img, (self.enemies[i].x, self.enemies[i].y), radius=1, color=self.d[self.ENEMY_N], thickness=-1)
+        # env[self.player.y][self.player.x] = self.d[self.PLAYER_N]  # sets the player tile to blue
+
+        start_point = (self.player.x - 1, self.player.y - 1)
+        end_point = (self.player.x + 1, self.player.y + 1)
+        # print(start_point, end_point)
+        img = cv2.rectangle(img, start_point, end_point, color=self.d[self.PLAYER_N], thickness=-1)
+
+        # img = Image.fromarray(env, 'RGB')  # reading to rgb. Apparently. Even tho color definitions are bgr. ???
         return img
