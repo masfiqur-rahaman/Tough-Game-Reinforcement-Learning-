@@ -1,4 +1,4 @@
 # Tough-Game-Reinforcement-Learning-
 
 
-![Alt text](./Images/game_screen.png?raw=true "Optional Title")
+![Alt text](./Images/tough game.png?raw=true "Optional Title")
